@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JIBZYFOODS - Order Dried Foods</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .header-logo i {
+            font-size: 2.8rem;
+            color: #ffcc00;
+        }
+        
+        /* Main Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Products Section */
+        .products-section h2, .cart-section h2, .about-section h2 {
+            color: #2e7d32;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ffcc00;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .product-image {
+            height: 180px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-name {
+            font-size: 1.3rem;
+            color: #1b5e20;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .product-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .product-price {
+            font-size: 1.4rem;
+            color: #2e7d32;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .add-to-cart-btn:hover {
+            background-color: #1b5e20;
+        }
+        
+        /* Cart Section */
+        .cart-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 20px;
+        }
+        
+        .cart-items {
+            min-height: 200px;
+            margin-bottom: 25px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .item-quantity {
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .item-price {
+            font-weight: 600;
+            color: #2e7d32;
+            min-width: 100px;
+            text-align: right;
+        }
+        
+        .remove-item {
+            color: #e53935;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 10px;
+        }
+        
+        .cart-empty {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            padding: 30px 0;
+        }
+        
+        .cart-summary {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        
+        .whatsapp-order-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background-color: #25D366;
+            color: white;
+            width: 100%;
+            padding: 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .whatsapp-order-btn:hover {
+            background-color: #1da851;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .whatsapp-order-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .clear-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .clear-cart-btn:hover {
+            background-color: #f1f1f1;
+        }
+        
+        /* About Section */
+        .about-section {
+            margin-top: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .about-text p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #f0f7f0;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .feature i {
+            color: #2e7d32;
+        }
+        
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        
+        /* FIXED NOTIFICATION STYLES */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 300px;
+        }
+        
+        .notification {
+            background-color: #2e7d32;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background-color: #2e7d32;
+        }
+        
+        .notification.error {
+            background-color: #e53935;
+        }
+        
+        .notification.info {
+            background-color: #2196F3;
+        }
+        
+        .notification i {
+            font-size: 1.2rem;
+        }
+        
+        .notification-message {
+            flex: 1;
+        }
+        
+        .close-notification {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-logo">
+                <i class="fas fa-fish"></i>
+                <h1>JIBZYFOODS</h1>
+            </div>
+            <p>Premium Quality Dried Foods • Order Directly via WhatsApp</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Products Section -->
+            <div class="products-section">
+                <h2>Our Premium Products</h2>
+                <div class="products-grid">
+                    <!-- Product 1: Dried Catfish -->
+                    <div class="product-card">
+                            <img src="https://humblesagefood.com/wp-content/uploads/2024/04/catfish.jpg" 
+                                alt="Dried Catfish" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-name">Dried Catfish</h3>
+                            <p class="product-description">Premium sun-dried catfish, rich in protein and omega-3. Perfect for soups, stews, and traditional dishes.</p>
+                            <div class="product-price">₦5,500 / kg</div>
+                            <button class="add-to-cart-btn" data-product="Dried Catfish" data-price="5500">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 2: Dried Snail -->
+                    <div class="product-card">
+                            <img src="https://humblesagefood.com/wp-content/uploads/2024/04/snail.jpeg" 
+                                alt="Dried Snail" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-name">Dried Snail</h3>
+                            <p class="product-description">Carefully processed and dried snails, packed with nutrients and flavor. Great for pepper soup and delicacies.</p>
+                            <div class="product-price">₦7,200 / kg</div>
+                            <button class="add-to-cart-btn" data-product="Dried Snail" data-price="7200">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3: Crayfish -->
+                    <div class="product-card">
+                            <img src="https://humblesagefood.com/wp-content/uploads/2024/04/dried-crayfish.jpg" 
+                                alt="Crayfish" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-name">Crayfish</h3>
+                            <p class="product-description">High-quality dried crayfish for enhancing the flavor of your dishes. Rich in calcium and protein.</p>
+                            <div class="product-price">₦4,800 / kg</div>
+                            <button class="add-to-cart-btn" data-product="Crayfish" data-price="4800">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 4: Dried Pepper -->
+                    <div class="product-card">
+                                <img src="https://www.pricepally.com/_next/image?url=https%3A%2F%2Fpp-new-node-medusa-prod-bucket.s3.us-east-1.amazonaws.com%2FDry%20Sombo%20General-1724926079293.jpg&w=1080&q=75" 
+                                    alt="Dried Pepper" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-name">Dried Pepper</h3>
+                            <p class="product-description">Sun-dried pepper blend, perfect for adding spice and flavor to your meals. Available in mild and hot varieties.</p>
+                            <div class="product-price">₦2,500 / kg</div>
+                            <button class="add-to-cart-btn" data-product="Dried Pepper" data-price="2500">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cart Section -->
+            <div class="cart-section">
+                <h2>Your Order Cart</h2>
+                <div class="cart-items" id="cartItems">
+                    <div class="cart-empty" id="cartEmpty">
+                        <p>Your cart is empty</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">Add products from the list</p>
+                    </div>
+                </div>
+                
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span id="cartTotal">₦0</span>
+                    </div>
+                    
+                    <a href="https://wa.me/2348149058763" class="whatsapp-order-btn" id="whatsappOrderBtn" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                    </a>
+                    
+                    <button class="clear-cart-btn" id="clearCartBtn">
+                        <i class="fas fa-trash"></i> Clear Cart
+                    </button>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background-color: #f0f7f0; border-radius: 8px; font-size: 0.9rem;">
+                    <p style="margin-bottom: 5px; font-weight: bold; color: #2e7d32;"><i class="fas fa-info-circle"></i> How to Order:</p>
+                    <p>1. Add items to cart</p>
+                    <p>2. Adjust quantities if needed</p>
+                    <p>3. Click "Order via WhatsApp"</p>
+                    <p>4. Your order will be sent to our WhatsApp</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- About Section -->
+        <div class="about-section">
+            <h2>About JIBZYFOODS</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>JIBZYFOODS is your trusted source for premium quality dried foods. We specialize in processing and supplying the finest dried catfish, snails, crayfish, and peppers to customers across Nigeria.</p>
+                    <p>Our products are carefully selected, hygienically processed, and sun-dried to preserve their natural flavor and nutritional value. We follow strict quality control measures to ensure you receive only the best.</p>
+                    
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>100% Natural</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shipping-fast"></i>
+                            <span>Fast Delivery</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-award"></i>
+                            <span>Premium Quality</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-leaf"></i>
+                            <span>No Preservatives</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&h=500&q=80" 
+                         alt="JIBZYFOODS Drying Process">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2023 JIBZYFOODS | Premium Processed Dried Foods | Lagos, Nigeria</p>
+            <p>Contact: +234 801 234 5678 | Email: info@jibzyfoods.com</p>
+        </div>
+    </div>
+    
+    <!-- FIXED NOTIFICATION CONTAINER -->
+    <div class="notification-container" id="notificationContainer">
+        <!-- Notifications will be added here dynamically -->
+    </div>
+    
+    <script>
+        // Cart functionality
+        let cart = JSON.parse(localStorage.getItem('jibzyfoods_cart')) || [];
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        const whatsappOrderBtn = document.getElementById('whatsappOrderBtn');
+        const clearCartBtn = document.getElementById('clearCartBtn');
+        const notificationContainer = document.getElementById('notificationContainer');
+        
+        // Initialize cart display
+        updateCartDisplay();
+        
+        // Add to cart buttons
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const product = this.getAttribute('data-product');
+                const price = parseInt(this.getAttribute('data-price'));
+                
+                // Check if item already in cart
+                const existingItemIndex = cart.findIndex(item => item.product === product);
+                
+                if (existingItemIndex > -1) {
+                    // Increase quantity
+                    cart[existingItemIndex].quantity += 1;
+                    showNotification(`${product} quantity increased!`, 'success');
+                } else {
+                    // Add new item
+                    cart.push({
+                        product: product,
+                        price: price,
+                        quantity: 1
+                    });
+                    showNotification(`${product} added to cart!`, 'success');
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('jibzyfoods_cart', JSON.stringify(cart));
+                
+                // Update display
+                updateCartDisplay();
+            });
+        });
+        
+        // Clear cart button
+        clearCartBtn.addEventListener('click', function() {
+            if (cart.length > 0) {
+                if (confirm('Are you sure you want to clear your cart?')) {
+                    cart = [];
+                    localStorage.setItem('jibzyfoods_cart', JSON.stringify(cart));
+                    updateCartDisplay();
+                    showNotification('Cart cleared successfully!', 'info');
+                }
+            }
+        });
+        
+        // Update cart display
+        function updateCartDisplay() {
+            // Clear cart display
+            cartItems.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="cart-empty" id="cartEmpty">
+                        <p>Your cart is empty</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">Add products from the list</p>
+                    </div>
+                `;
+                cartTotal.textContent = '₦0';
+                whatsappOrderBtn.style.pointerEvents = 'none';
+                whatsappOrderBtn.style.opacity = '0.6';
+                return;
+            }
+            
+            // Calculate total and display items
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'cart-item';
+                cartItemElement.innerHTML = `
+                    <div class="item-name">${item.product}</div>
+                    <div class="item-controls">
+                        <button class="quantity-btn minus-btn" data-index="${index}">-</button>
+                        <span class="item-quantity">${item.quantity} kg</span>
+                        <button class="quantity-btn plus-btn" data-index="${index}">+</button>
+                        <button class="remove-item" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="item-price">₦${itemTotal.toLocaleString()}</div>
+                `;
+                
+                cartItems.appendChild(cartItemElement);
+            });
+            
+            // Update total
+            cartTotal.textContent = `₦${total.toLocaleString()}`;
+            
+            // Enable WhatsApp button
+            whatsappOrderBtn.style.pointerEvents = 'auto';
+            whatsappOrderBtn.style.opacity = '1';
+            
+            // Update WhatsApp link with order details (uses wa.me with local contact)
+            const orderText = generateOrderText();
+            whatsappOrderBtn.href = `https://wa.me/2348149058763?text=${encodeURIComponent(orderText)}`;
+            
+            // Add event listeners to cart controls
+            document.querySelectorAll('.minus-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    updateQuantity(index, -1);
+                });
+            });
+            
+            document.querySelectorAll('.plus-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    updateQuantity(index, 1);
+                });
+            });
+            
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeItem(index);
+                });
+            });
+        }
+        
+        // Update item quantity
+        function updateQuantity(index, change) {
+            const productName = cart[index].product;
+            cart[index].quantity += change;
+            
+            // Remove item if quantity becomes 0
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+                showNotification(`${productName} removed from cart`, 'error');
+            } else {
+                showNotification(`${productName} quantity updated to ${cart[index].quantity}kg`, 'info');
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('jibzyfoods_cart', JSON.stringify(cart));
+            
+            // Update display
+            updateCartDisplay();
+        }
+        
+        // Remove item completely
+        function removeItem(index) {
+            const productName = cart[index].product;
+            cart.splice(index, 1);
+            
+            // Save to localStorage
+            localStorage.setItem('jibzyfoods_cart', JSON.stringify(cart));
+            
+            // Update display
+            updateCartDisplay();
+            
+            showNotification(`${productName} removed from cart`, 'error');
+        }
+        
+        // Generate order text for WhatsApp
+        function generateOrderText() {
+            let orderText = "Hello JIBZYFOODS! I'd like to place an order:\n\n";
+            
+            cart.forEach(item => {
+                orderText += `• ${item.product}: ${item.quantity}kg × ₦${item.price.toLocaleString()} = ₦${(item.price * item.quantity).toLocaleString()}\n`;
+            });
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            orderText += `\n📦 *Total: ₦${total.toLocaleString()}*\n\n`;
+            orderText += `Please contact me to arrange payment and delivery.`;
+            orderText += `\n\nThank you!`;
+            
+            return orderText;
+        }
+        
+        // FIXED NOTIFICATION FUNCTION - Now works on PC
+        function showNotification(message, type = 'success') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            // Set icon based on type
+            let icon = 'fa-check-circle';
+            if (type === 'error') icon = 'fa-times-circle';
+            if (type === 'info') icon = 'fa-info-circle';
+            
+            notification.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <div class="notification-message">${message}</div>
+                <button class="close-notification">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Add to container
+            notificationContainer.appendChild(notification);
+            
+            // Show with animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Close button functionality
+            const closeBtn = notification.querySelector('.close-notification');
+            closeBtn.addEventListener('click', () => {
+                closeNotification(notification);
+            });
+            
+            // Auto-remove after 4 seconds
+            setTimeout(() => {
+                closeNotification(notification);
+            }, 4000);
+        }
+        
+        // Close notification with animation
+        function closeNotification(notification) {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        }
+        
+        // Auto-save cart every 10 seconds (optional)
+        setInterval(() => {
+            if (cart.length > 0) {
+                localStorage.setItem('jibzyfoods_cart', JSON.stringify(cart));
+            }
+        }, 10000);
+        
+        // Add keyboard shortcut: Ctrl+Z to undo last action
+        let lastCartState = null;
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'z') {
+                if (lastCartState) {
+                    cart = JSON.parse(lastCartState);
+                    localStorage.setItem('jibzyfoods_cart', JSON.stringify(cart));
+                    updateCartDisplay();
+                    showNotification('Last action undone!', 'info');
+                }
+            }
+            
+            // Save cart state before changes
+            lastCartState = JSON.stringify(cart);
+        });
+    </script>
+</body>
+</html>
